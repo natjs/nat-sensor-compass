@@ -12,29 +12,29 @@ import java.util.TimerTask;
 
 /**
  * Created by xuqinchao on 17/2/6.
- * Copyright (c) 2017 Nat. All rights reserved.
+ * Copyright (c) 2017 Instapp. All rights reserved.
  */
 
-public class HLCompassModule{
+public class CompassModule {
 
-    private HLModuleResultListener mListener;
+    private ModuleResultListener mListener;
     private float mHeading;
     private Timer timer;
-    int interval = 100;
+    int interval = 32;
     private SensorManager mWatchSensorManager;
 
     private Context mContext;
-    private static volatile HLCompassModule instance = null;
+    private static volatile CompassModule instance = null;
 
-    private HLCompassModule(Context context){
+    private CompassModule(Context context){
         mContext = context;
     }
 
-    public static HLCompassModule getInstance(Context context) {
+    public static CompassModule getInstance(Context context) {
         if (instance == null) {
-            synchronized (HLCompassModule.class) {
+            synchronized (CompassModule.class) {
                 if (instance == null) {
-                    instance = new HLCompassModule(context);
+                    instance = new CompassModule(context);
                 }
             }
         }
@@ -42,7 +42,7 @@ public class HLCompassModule{
         return instance;
     }
 
-    public void get(final HLModuleResultListener listener){
+    public void get(final ModuleResultListener listener){
         if (listener == null)return;
         final SensorManager sm = (SensorManager) mContext.getSystemService(Context.SENSOR_SERVICE);
         int sensorType = Sensor.TYPE_ORIENTATION;
@@ -66,14 +66,13 @@ public class HLCompassModule{
         }, sm.getDefaultSensor(sensorType), SensorManager.SENSOR_DELAY_NORMAL);
     }
 
-    public void watch(HashMap<String, Integer> option, final HLModuleResultListener listener){
+    public void watch(HashMap<String, Integer> option, final ModuleResultListener listener){
 
         if (mWatchSensorManager != null)return;
         mListener = listener;
         if (option.containsKey("interval")) {
             interval = option.get("interval");
         }
-
         timer = new Timer();
         timer.schedule(new MyTimerTask(), 0, interval);
         mWatchSensorManager = (SensorManager) mContext.getSystemService(Context.SENSOR_SERVICE);
@@ -104,7 +103,7 @@ public class HLCompassModule{
     }
 
     boolean mClearWatch = false;
-    public void clearWatch(HLModuleResultListener listener){
+    public void clearWatch(ModuleResultListener listener){
         if (listener == null || mWatchSensorManager == null)return;
         mClearWatch = true;
         listener.onResult(null);
