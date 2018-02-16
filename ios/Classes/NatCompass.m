@@ -64,6 +64,7 @@
     if (_manager) {
         [_manager stopUpdatingHeading];
         _manager = nil;
+        back(nil,nil);
     }
 }
 #pragma mark - CLLocationManagerDelegate
